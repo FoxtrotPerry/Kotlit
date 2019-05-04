@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.3.21'
+    ext.ktor_version = '1.1.5'
 
     repositories {
         mavenCentral()
@@ -20,6 +21,12 @@ version '1.0-SNAPSHOT'
 apply plugin: 'application'
 apply plugin: 'kotlin'
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 mainClassName = "com.perry.KotlitKt"
 sourceCompatibility = 1.8
 
@@ -27,6 +34,9 @@ defaultTasks 'run'
 
 repositories {
     mavenCentral()
+    jcenter()
+    maven { url "http://dl.bintray.com/kotlin/ktor" }
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
 }
 
 dependencies {
@@ -34,6 +44,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'com.squareup.okhttp3:okhttp:3.14.1'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "io.ktor:ktor:$ktor_version"
+    implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "io.ktor:ktor-html-builder:$ktor_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    compile "ch.qos.logback:logback-classic:1.2.1"
 }
 
 compileKotlin {
