@@ -6,9 +6,13 @@ import java.util.concurrent.TimeUnit
 
 
 object LightRGBRepo {
+<<<<<<< HEAD
     var client = OkHttpClient()
     var request = GetWrapper(client)
     val gson = GsonBuilder().create()
+=======
+//    fun get() =
+>>>>>>> b11712134fce2a0e95655a6f0ebfb85564eb254d
 
 
     fun get(): LightRGB {

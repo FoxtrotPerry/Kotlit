@@ -6,6 +6,11 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 fun main() {
+
+    SolarDataModule.beginFetching()
+
+
+
     val url = "https://jsonplaceholder.typicode.com/users"
     val request = Request.Builder()
         .url(url)
@@ -15,12 +20,12 @@ fun main() {
         .writeTimeout(5, TimeUnit.SECONDS)
         .readTimeout(5, TimeUnit.SECONDS)
         .build()
-    val jsonResp = client.newCall(request).enqueue(object: Callback {
+    val jsonResp = client.newCall(request).enqueue(object : Callback {
         override fun onResponse(call: Call, response: Response) {
             val body = response.body()?.string()
             val gson = GsonBuilder().create()
             val json: List<TestRest> = gson.fromJson(body, Array<TestRest>::class.java).toList()
-            for (jsonObject in json){
+            for (jsonObject in json) {
                 println(jsonObject.name)
                 println(jsonObject.username)
                 println(jsonObject.address.geo.lat)
