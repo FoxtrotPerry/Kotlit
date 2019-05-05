@@ -1,17 +1,40 @@
 package com.perry
 
+import com.perry.services.ApiService
+import java.awt.Color
 import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.*
 
-class SolarData {
+data class SolarData (val sunrise: LocalDateTime, val sunset: LocalDateTime)
+
+
+class SolarDataModule {
     init {
         //setDates()
     }
 
-    var sunrise: LocalDateTime = LocalDateTime.now()
 
-    var sunset: LocalDateTime = LocalDateTime.now()
+    companion object {
+
+        fun beginFetching() {
+            while(true) {
+                val solarData = ApiService.getSolarData()
+                determineColor(solarData)
+                // rgbService.setColor(rgba);
+
+                Thread.sleep(1000)
+            }
+        }
+
+        private fun determineColor(solarData: SolarData): Color {
+            val defaultOffset = 6
+            val today = LocalDateTime.now()
+            val currentHourAsDecimal = today.hour + (today.minute/60) + (solarData.sunset.hour - defaultOffset)
+            val lightness = (if (currentHourAsDecimal <= 11) currentHourAsDecimal / 11 else (23-today.hour) / 11)
+
+            return Color(0, 128, 255, (lightness/1)*255)
+        }
+    }
+
 
 /*    fun setDates() {
         val response = queryAPI().getJSONObject("results")
