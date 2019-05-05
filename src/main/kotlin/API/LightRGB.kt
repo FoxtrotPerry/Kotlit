@@ -1,5 +1,5 @@
 package com.perry.API
 
-data class LightRGB(val R: Int, val G: Int, val B: Int, val A: Int = 255) {
+data class LightRGB(var R: Int, var G: Int, var B: Int, var A: Int = 255, var time: String) {
 
 }
