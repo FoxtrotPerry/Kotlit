@@ -1,24 +1,43 @@
 package com.perry.API
-import okhttp3.Callback
+import com.google.gson.GsonBuilder
+import okhttp3.*
 import java.io.IOException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import java.util.concurrent.TimeUnit
 
 
 object LightRGBRepo {
-    fun get() =
+    var client = OkHttpClient()
+    var request = GetWrapper(client)
+    val gson = GsonBuilder().create()
+
+
+    fun get(): LightRGB {
+        val url = "http://worldclockapi.com/api/json/est/now"
+        val data = LightRGB(0,0,0)
+        request.GET(url, object: Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val respData = response.body()?.string()
+                println("Request made sucessfully!")
+                println(respData)
+                val jsonObject = gson.fromJson(respData,TimeObject::class.java)
+                println(jsonObject.currentDateTime.subSequence(11,16))
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                println("REQUEST FAILED!")
+            }
+        })
+        return data
+    }
 
 
 }
 
-fun GET(url: String, callback: Callback) {
-    var client = OkHttpClient.Builder()
-        .connectTimeout(5,TimeUnit.SECONDS)
-        .writeTimeout(5,TimeUnit.SECONDS)
-        .readTimeout(5,TimeUnit.SECONDS)
-        .build()
-
-
-}
+class TimeObject(val id: String,
+                 val currentDateTime: String,
+                 val utcOffset: String,
+                 val isDayLightSavingsTime: Boolean,
+                 val dayOfTheWeek: String,
+                 val timeSoneName: String,
+                 val currentFileTime: Long,
+                 val ordinalDate: String)

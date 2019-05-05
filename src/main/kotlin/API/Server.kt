@@ -7,17 +7,16 @@ import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
+val portArgName = "--server.port"
+val defaultPort = 3232
+
 fun main(args: Array<String>) {
-    val server = embeddedServer(Netty, port = 3232) {
-        routing {
-            get("/") {
-                call.respondText("Hello World!", ContentType.Text.Plain)
-            }
-            get("/demo") {
-                call.respondText("HELLO WORLD!")
-            }
-        }
-    }
-    server.start(wait = true)
+    val portConfigured = args.isNotEmpty() && args[0].startsWith(portArgName)
+
+    val port = if(portConfigured) {
+        args[0].split("=").last().trim().toInt()
+    } else defaultPort
+
+    embeddedServer(Netty, port, module = Application::main).start(wait = true)
 }
 

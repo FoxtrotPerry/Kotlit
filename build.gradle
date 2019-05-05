@@ -22,9 +22,7 @@ apply plugin: 'application'
 apply plugin: 'kotlin'
 
 kotlin {
-    experimental {
-        coroutines "enable"
-    }
+
 }
 
 mainClassName = "com.perry.KotlitKt"
