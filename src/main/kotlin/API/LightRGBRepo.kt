@@ -7,6 +7,8 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import java.io.IOException;
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 
 object LightRGBRepo {
@@ -23,12 +25,20 @@ object LightRGBRepo {
                     override fun onResponse(call: Call, response: Response) {
                         val respData = response.body()?.string()
                         println("Request made sucessfully!")
-                        println(respData)
                         val jsonObject = gson.fromJson(respData, TimeObject::class.java)
                         val percentThroughDay =
                             (jsonObject.currentDateTime.subSequence(11,13).toString().toFloat()/24) +
                             (jsonObject.currentDateTime.subSequence(14,16).toString().toFloat()/60/24)
                         println("Percent through day is: ${percentThroughDay}")
+                        data.R = if (percentThroughDay >= 0.5)
+                            (abs((percentThroughDay-1.0)*2)*120).toInt() else
+                            (percentThroughDay*2*120).toInt()
+                        data.G = if (percentThroughDay >= 0.5)
+                            (abs((percentThroughDay-1.0)*2)*220).toInt() else
+                            (percentThroughDay*2*220).toInt()
+                        data.B = if (percentThroughDay >= 0.5)
+                            (abs((percentThroughDay-1.0)*2)*255).toInt() else
+                            (percentThroughDay*2*255).toInt()
                         data.time = jsonObject.currentDateTime.subSequence(11, 16).toString()
                     }
 
