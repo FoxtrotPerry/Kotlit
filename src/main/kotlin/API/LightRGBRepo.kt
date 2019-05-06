@@ -18,7 +18,7 @@ object LightRGBRepo {
 
     fun get(): LightRGB {
         val url = "http://worldclockapi.com/api/json/est/now"
-        var data = LightRGB(0, 0, 0, time = "")
+        var data = LightRGB(1.0, 1.0, 1.0, time = "")
         GlobalScope.async {
             val getJob = GlobalScope.async {
                 request.GET(url, object : Callback {
@@ -31,14 +31,14 @@ object LightRGBRepo {
                             (jsonObject.currentDateTime.subSequence(14,16).toString().toFloat()/60/24)
                         println("Percent through day is: ${percentThroughDay}")
                         data.R = if (percentThroughDay >= 0.5)
-                            (abs((percentThroughDay-1.0)*2)*120).toInt() else
-                            (percentThroughDay*2*120).toInt()
+                            (abs((percentThroughDay-1.0)*2)) else
+                            (percentThroughDay*2).toDouble()
                         data.G = if (percentThroughDay >= 0.5)
-                            (abs((percentThroughDay-1.0)*2)*220).toInt() else
-                            (percentThroughDay*2*220).toInt()
+                            (abs((percentThroughDay-1.0)*2)) else
+                            (percentThroughDay*2).toDouble()
                         data.B = if (percentThroughDay >= 0.5)
-                            (abs((percentThroughDay-1.0)*2)*255).toInt() else
-                            (percentThroughDay*2*255).toInt()
+                            (abs((percentThroughDay-1.0)*2)) else
+                            (percentThroughDay*2).toDouble()
                         data.time = jsonObject.currentDateTime.subSequence(11, 16).toString()
                     }
 
